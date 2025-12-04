@@ -695,4 +695,59 @@ ul {
 .bento-section {
     position: relative;
     user-select: none;
+}/* Form Success/Error Messages */
+.form-success,
+.form-error {
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+}
+
+.form-success {
+    background: rgba(0, 255, 170, 0.15);
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.form-error {
+    background: rgba(255, 77, 77, 0.15);
+    border: 1px solid #FF4D4D;
+    color: #FF9999;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Calculator Section */
+.calculator-section {
+    background: linear-gradient(135deg, rgba(0, 255, 170, 0.03), rgba(0, 0, 0, 0));
+}
+
+.footer-credits {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.lancealot-link {
+    color: var(--color-primary);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.lancealot-link:hover {
+    text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+    color: #00FFAA;
 }

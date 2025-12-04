@@ -8,6 +8,8 @@ import LogoLoop from './components/LogoLoop';
 import StarBorder from './components/StarBorder';
 import StaggeredMenu from './components/StaggeredMenu';
 import GradientText from './components/GradientText';
+import WhatsAppButton from './components/WhatsAppButton';
+import SIPCalculator from './components/SIPCalculator';
 import { FaChartLine, FaMoneyBillWave, FaCoins, FaPiggyBank, FaChartPie, FaWallet, FaTrophy, FaHandHoldingUsd } from 'react-icons/fa';
 import { defaultContent } from './data';
 
@@ -45,6 +47,7 @@ const SOCIAL_ITEMS = [
 
 function App() {
   const [content, setContent] = useState(defaultContent);
+  const [formStatus, setFormStatus] = useState({ submitted: false, error: null });
 
   // Load content from localStorage if available (mimicking original logic)
   useEffect(() => {
@@ -58,8 +61,38 @@ function App() {
     }
   }, []);
 
+  // Handle contact form submission
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus({ submitted: false, error: null });
+
+    const formData = new FormData(e.target);
+
+    try {
+      const response = await fetch('https://formspree.io/f/mkgdzgby', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setFormStatus({ submitted: true, error: null });
+        e.target.reset();
+        setTimeout(() => setFormStatus({ submitted: false, error: null }), 5000);
+      } else {
+        setFormStatus({ submitted: false, error: 'Failed to send message. Please try again.' });
+      }
+    } catch (error) {
+      setFormStatus({ submitted: false, error: 'Network error. Please check your connection.' });
+    }
+  };
+
   return (
     <div className="App">
+      {/* WhatsApp Floating Button */}
+      <WhatsAppButton phoneNumber="916307586760" message="Hi! I'm interested in your investment advisory services." />
       {/* Navigation - StaggeredMenu */}
       <StaggeredMenu
         position="right"
@@ -215,6 +248,13 @@ function App() {
         </div>
       </section>
 
+      {/* SIP Calculator Section */}
+      <section id="sip-calculator" className="section calculator-section">
+        <div className="container">
+          <SIPCalculator />
+        </div>
+      </section>
+
       <section id="green-portfolio" className="section green-section">
         <div className="container">
           <StarBorder as="div" color="#00FFAA" speed="8s" thickness={2}>
@@ -283,32 +323,44 @@ function App() {
                 <div className="contact-details">
                   <div className="contact-item">
                     <span className="icon">📧</span>
-                    <span>navneet.invest@example.com</span>
+                    <span>navneetknight@gmail.com</span>
                   </div>
                   <div className="contact-item">
                     <span className="icon">📞</span>
-                    <span>+91 98765 43210</span>
+                    <span>+91 6307586760</span>
                   </div>
                 </div>
               </div>
-              <form className="contact-form">
+              <form className="contact-form" onSubmit={handleFormSubmit}>
                 <div className="form-group">
                   <label htmlFor="name">Name</label>
-                  <input type="text" id="name" placeholder="Your Name" required />
+                  <input type="text" id="name" name="name" placeholder="Your Name" required />
                 </div>
                 <div className="form-group">
                   <label htmlFor="email">Email</label>
-                  <input type="email" id="email" placeholder="Your Email" required />
+                  <input type="email" id="email" name="email" placeholder="Your Email" required />
                 </div>
                 <div className="form-group">
                   <label htmlFor="phone">Phone Number</label>
-                  <input type="tel" id="phone" placeholder="Your Phone Number" />
+                  <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" />
                 </div>
                 <div className="form-group">
                   <label htmlFor="message">Message</label>
-                  <textarea id="message" rows="4" placeholder="How can I help you?" required></textarea>
+                  <textarea id="message" name="message" rows="4" placeholder="How can I help you?" required></textarea>
                 </div>
-                <button type="submit" id="contact-button" className="btn btn-primary">{content.contact.button_text}</button>
+                {formStatus.submitted && (
+                  <div className="form-success">
+                    ✓ Thank you! Your message has been sent successfully.
+                  </div>
+                )}
+                {formStatus.error && (
+                  <div className="form-error">
+                    ✕ {formStatus.error}
+                  </div>
+                )}
+                <button type="submit" id="contact-button" className="btn btn-primary" disabled={formStatus.submitted}>
+                  {formStatus.submitted ? 'Message Sent!' : content.contact.button_text}
+                </button>
               </form>
             </div>
           </StarBorder>
@@ -320,7 +372,13 @@ function App() {
         <div className="container footer-content">
           <p>&copy; 2025 Navneet Kumar. All rights reserved.</p>
           <p className="footer-tagline">Invest Smart. Invest Green.</p>
-          <a href="admin.html" className="admin-link">Admin Login</a>
+          <p className="footer-credits">
+            Managed and Designed by{' '}
+            <a href="https://lancealot.in" target="_blank" rel="noopener noreferrer" className="lancealot-link">
+              Lancealot
+            </a>
+          </p>
+
         </div>
       </footer>
     </div>

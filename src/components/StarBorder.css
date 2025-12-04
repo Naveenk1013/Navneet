@@ -26,7 +26,7 @@
             transparent 360deg);
     animation: star-border-spin var(--animation-speed, 5s) linear infinite;
     pointer-events: none;
-    z-index: 1;
+    z-index: -1;
 }
 
 .star-border-content {
